@@ -18,7 +18,12 @@ const Prototype = () => {
   const dots = xArray.map((x, i) => {
     return yArray.map((y, j) => {
       return (
-        <circle cx={i} cy={j} r={(Math.sin(now + ((i & j) - (j / 100))) + 1) / 5} fill={`hsl(${240}, 50%, 70%)`} />
+        <circle 
+          cx={i} 
+          cy={j} 
+          r={(Math.sin(now + ((i & j) - (j / 100))) + 1) / 5} 
+          fill={`hsl(240, 50%, 70%)`} 
+        />
       )
     })
   })
