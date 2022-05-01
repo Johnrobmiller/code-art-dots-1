@@ -1,6 +1,12 @@
+import { Link } from "react-router-dom"
+
 const Home = () => {
   return (
-    <>Nothing to see here!</>
+    <>
+      <Link to='/one'>Link to anim one</Link>
+      <br/>
+      <Link to='/two'>Link to anim two</Link>
+    </>
   )
 }
 
