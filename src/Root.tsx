@@ -1,13 +1,16 @@
 import { Route, Routes } from 'react-router-dom'
+import Home from './views/Home'
 
-// import logo from './logo.svg'
-import Prototype from './views/Prototype'
+import One from './views/One'
 
+import Two from './views/Two'
 const Root = () => {
 
   return (
     <Routes>
-      <Route path='/' element={<Prototype />} />
+      <Route path='/' element={<Home />} />
+      <Route path='/one' element={<One />} />
+      <Route path='/two' element={<Two />} />
     </Routes>
   )
 }

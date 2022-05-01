@@ -1,7 +1,7 @@
 import _ from 'lodash'
 import { useEffect, useState } from 'react'
 
-const Prototype = () => {
+const One = () => {
 
   const [now, setNow] = useState<number>(20)
 
@@ -29,14 +29,14 @@ const Prototype = () => {
   })
 
   return (
-    <>
+    <div style={{ backgroundColor: '#051a27'}}>
       <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
         {
           dots
         }
       </svg>
-    </>
+    </div>
   )
 }
 
-export default Prototype
+export default One
