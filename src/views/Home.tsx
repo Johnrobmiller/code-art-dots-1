@@ -7,7 +7,9 @@ const Home = () => {
       <br/>
       <Link to='/two'>Link to anim two</Link>
       <br/>
-      <Link to='/three'>Link to anim two</Link>
+      <Link to='/three'>Link to anim three</Link>
+      <br/>
+      <Link to='/arrow-keys'>Link to arrow keys prototype</Link>
     </>
   )
 }
