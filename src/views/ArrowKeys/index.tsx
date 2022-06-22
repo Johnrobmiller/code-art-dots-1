@@ -70,8 +70,8 @@ document.addEventListener('keyup', handleKeyUp)
 
 // Todo: clean up this mess, organize, etc.
 
-const xMaxMomemtum = 10
-const yMaxMomemtum = 10
+const xMaxMomemtum = 2
+const yMaxMomemtum = 2
 let xMomentum = 0
 let yMomentum = 0
 
@@ -79,17 +79,17 @@ let xPos = 0
 let yPos = 0
 
 const updatePhysics = () => {
-  if (isRight) Math.min(xMaxMomemtum, xMomentum += 0.5)
-  else if (xMomentum > 0) xMomentum = Math.max(0, xMomentum - 2)
+  if (isRight) Math.min(xMaxMomemtum, xMomentum += 1)
+  else if (xMomentum > 0) xMomentum = Math.max(0, xMomentum - 3)
 
-  if (isLeft) Math.max(-xMaxMomemtum, xMomentum -= 0.5)
-  else if (xMomentum < 0) xMomentum = Math.min(0, xMomentum + 2)
+  if (isLeft) Math.max(-xMaxMomemtum, xMomentum -= 1)
+  else if (xMomentum < 0) xMomentum = Math.min(0, xMomentum + 3)
 
-  if (isUp) Math.min(yMaxMomemtum, yMomentum += 0.5)
-  else if (yMomentum > 0) yMomentum = Math.max(0, yMomentum - 2)
+  if (isUp) Math.min(yMaxMomemtum, yMomentum += 1)
+  else if (yMomentum > 0) yMomentum = Math.max(0, yMomentum - 3)
 
-  if (isDown) Math.max(-yMaxMomemtum, yMomentum -= 0.5)
-  else if (yMomentum < 0) yMomentum = Math.min(0, yMomentum + 2)
+  if (isDown) Math.max(-yMaxMomemtum, yMomentum -= 1)
+  else if (yMomentum < 0) yMomentum = Math.min(0, yMomentum + 3)
 
   // todo: actual momentun
   // https://www.mathopenref.com/arccos.html
@@ -109,50 +109,94 @@ const maxX = 100
 const maxY = 70
 const xArray = _.times(maxX)
 const yArray = _.times(maxY)
+
+
+//! /////////////
+
+window.requestAnimationFrame(step)
+
+let start: number | undefined
+let previousTimestamp = 0
+
+function step (timestamp: number) {
+  if (start === undefined) {
+    start = timestamp;
+  }
+  const elapsed = timestamp - start;
+
+  if (previousTimestamp !== timestamp) {
+    console.log('fps', 1000 / (timestamp - previousTimestamp))
+
+    const dotData = xArray.map((x, i) => {
+
+      const relativeI = maxX - Math.abs(i + xPos) % maxX
+
+      return yArray.map((y, j) => {
+
+        const relativeJ = Math.abs(j + yPos) % maxY
+        const o1 = (Math.sin(timestamp + ((i & j) - (j / 100))) + 1) / 2
+        const o10 = (Math.sin(timestamp * 10 + ((i & j) - (j / 100))) + 1) / 2
+        
+        return {
+          cx: relativeI,
+          cy: relativeJ,
+          r: o10 / 2,
+          fill: `hsl(${((o1 * 100 & timestamp) + 180) * (timestamp / 4)}, ${(o1 / 2 + 0.5) * 100 & timestamp}%, ${(o1 / 2 + 0.5) * 100 & timestamp}%)`
+        }    
+      })
+    })
+  }
+
+  previousTimestamp = timestamp
+  window.requestAnimationFrame(step)
+}
+
+
+//! //////////////
   
 const ArrowKeys = () => {
 
-  // ! ---------------
-  // ! COMPONENT SETUP
-  // ! ---------------
+  // // ! ---------------
+  // // ! COMPONENT SETUP
+  // // ! ---------------
 
-  // states
-  const [tempo, setTempo] = useState<number>(startingTime)
+  // // states
+  // const [tempo, setTempo] = useState<number>(startingTime)
 
-  // TODO: this and the tempo state should get abstracted out into a useTempo hook
-  // animattion setup
-  useAnimationFrame(({time}: {time: number}) => {
-    // rendering every other frame to improve performance
-    // if (shouldRenderThisFrame) setTempo(startingTime + time / 20)
-    if (shouldRenderThisFrame) setTempo(startingTime + time / 20)
-    shouldRenderThisFrame = !shouldRenderThisFrame
-  })
+  // // TODO: this and the tempo state should get abstracted out into a useTempo hook
+  // // animattion setup
+  // useAnimationFrame(({time}: {time: number}) => {
+  //   // rendering every other frame to improve performance
+  //   // if (shouldRenderThisFrame) setTempo(startingTime + time / 20)
+  //   if (shouldRenderThisFrame) setTempo(startingTime + time / 10)
+  //   shouldRenderThisFrame = !shouldRenderThisFrame
+  // })
 
-  // ! ------------------
-  // ! RENDERING THE DOTS
-  // ! ------------------
+  // // ! ------------------
+  // // ! RENDERING THE DOTS
+  // // ! ------------------
 
-  const dots = xArray.map((x, i) => {
+  // const dots = xArray.map((x, i) => {
 
-    const relativeI = maxX - Math.abs(i + xPos) % maxX
+  //   const relativeI = maxX - Math.abs(i + xPos) % maxX
 
-    return yArray.map((y, j) => {
+  //   return yArray.map((y, j) => {
 
-      const relativeJ = Math.abs(j + yPos) % maxY
+  //     const relativeJ = Math.abs(j + yPos) % maxY
 
-      // range between 0 and 1
-      const o1 = (Math.sin(tempo + ((i & j) - (j / 100))) + 1) / 2
-      const o10 = (Math.sin(tempo * 10 + ((i & j) - (j / 100))) + 1) / 2
-      return (
-        <circle 
-          cx={relativeI} 
-          cy={relativeJ} 
-          r={(o10) / 2}
-          fill={`hsl(${((o1 * 100 & tempo) + 180) * (tempo / 4)}, ${(o1 / 2 + 0.5) * 100 & tempo}%, ${(o1 / 2 + 0.5) * 100 & tempo}%)`}
-        />
-      )
-    })
-  })
+  //     // range between 0 and 1
+  //     const o1 = (Math.sin(tempo + ((i & j) - (j / 100))) + 1) / 2
+  //     const o10 = (Math.sin(tempo * 10 + ((i & j) - (j / 100))) + 1) / 2
+  //     return (
+  //       <circle 
+  //         cx={relativeI} 
+  //         cy={relativeJ} 
+  //         r={(o10) / 2} 
+  //         fill={`hsl(${((o1 * 100 & tempo) + 180) * (tempo / 4)}, ${(o1 / 2 + 0.5) * 100 & tempo}%, ${(o1 / 2 + 0.5) * 100 & tempo}%)`}
+  //       />
+  //     )
+  //   })
+  // })
   
   // ! --------------
   // ! RETURNING MAIN 
@@ -175,7 +219,7 @@ const ArrowKeys = () => {
       </svg>
       <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
         {
-          dots
+          // dots
         }
       </svg>
     </div>
