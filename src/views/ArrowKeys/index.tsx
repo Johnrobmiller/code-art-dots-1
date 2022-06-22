@@ -1,4 +1,4 @@
-import _ from 'lodash'
+import _, { times } from 'lodash'
 import { useState } from 'react'
 
 // @ts-expect-error no types for this library
@@ -117,6 +117,7 @@ window.requestAnimationFrame(step)
 
 let start: number | undefined
 let previousTimestamp = 0
+let dotsEl: SVGElement | null = null
 
 function step (timestamp: number) {
   if (start === undefined) {
@@ -124,8 +125,11 @@ function step (timestamp: number) {
   }
   const elapsed = timestamp - start;
 
-  if (previousTimestamp !== timestamp) {
+  if (!dotsEl) dotsEl = document.getElementById('dots') as SVGElement | null
+  if (previousTimestamp !== timestamp && dotsEl) {
     console.log('fps', 1000 / (timestamp - previousTimestamp))
+
+    const tempo = timestamp / 5000 + 5000
 
     const dotData = xArray.map((x, i) => {
 
@@ -134,16 +138,26 @@ function step (timestamp: number) {
       return yArray.map((y, j) => {
 
         const relativeJ = Math.abs(j + yPos) % maxY
-        const o1 = (Math.sin(timestamp + ((i & j) - (j / 100))) + 1) / 2
-        const o10 = (Math.sin(timestamp * 10 + ((i & j) - (j / 100))) + 1) / 2
+        const o1 = (Math.sin(tempo + ((i & j) - (j / 100))) + 1) / 2
+        const o10 = (Math.sin(tempo * 10 + ((i & j) - (j / 100))) + 1) / 2
         
         return {
           cx: relativeI,
           cy: relativeJ,
           r: o10 / 2,
-          fill: `hsl(${((o1 * 100 & timestamp) + 180) * (timestamp / 4)}, ${(o1 / 2 + 0.5) * 100 & timestamp}%, ${(o1 / 2 + 0.5) * 100 & timestamp}%)`
+          fill: `hsl(${((o1 * 100 & tempo) + 180) * (tempo / 4)}, ${(o1 / 2 + 0.5) * 100 & tempo}%, ${(o1 / 2 + 0.5) * 100 & tempo}%)`
         }    
       })
+    })
+
+    Array.from(dotsEl.children).forEach((circleSvg, flattenedIndex) => {
+      const i = Math.floor(flattenedIndex / maxY)
+      const j = flattenedIndex % maxY
+      const currentDotData = dotData[i][j]
+      circleSvg.setAttribute('cx', `${currentDotData.cx}`)
+      circleSvg.setAttribute('cy', `${currentDotData.cy}`)
+      circleSvg.setAttribute('r', `${currentDotData.r}`)
+      circleSvg.setAttribute('fill', `${currentDotData.fill}`)
     })
   }
 
@@ -155,48 +169,6 @@ function step (timestamp: number) {
 //! //////////////
   
 const ArrowKeys = () => {
-
-  // // ! ---------------
-  // // ! COMPONENT SETUP
-  // // ! ---------------
-
-  // // states
-  // const [tempo, setTempo] = useState<number>(startingTime)
-
-  // // TODO: this and the tempo state should get abstracted out into a useTempo hook
-  // // animattion setup
-  // useAnimationFrame(({time}: {time: number}) => {
-  //   // rendering every other frame to improve performance
-  //   // if (shouldRenderThisFrame) setTempo(startingTime + time / 20)
-  //   if (shouldRenderThisFrame) setTempo(startingTime + time / 10)
-  //   shouldRenderThisFrame = !shouldRenderThisFrame
-  // })
-
-  // // ! ------------------
-  // // ! RENDERING THE DOTS
-  // // ! ------------------
-
-  // const dots = xArray.map((x, i) => {
-
-  //   const relativeI = maxX - Math.abs(i + xPos) % maxX
-
-  //   return yArray.map((y, j) => {
-
-  //     const relativeJ = Math.abs(j + yPos) % maxY
-
-  //     // range between 0 and 1
-  //     const o1 = (Math.sin(tempo + ((i & j) - (j / 100))) + 1) / 2
-  //     const o10 = (Math.sin(tempo * 10 + ((i & j) - (j / 100))) + 1) / 2
-  //     return (
-  //       <circle 
-  //         cx={relativeI} 
-  //         cy={relativeJ} 
-  //         r={(o10) / 2} 
-  //         fill={`hsl(${((o1 * 100 & tempo) + 180) * (tempo / 4)}, ${(o1 / 2 + 0.5) * 100 & tempo}%, ${(o1 / 2 + 0.5) * 100 & tempo}%)`}
-  //       />
-  //     )
-  //   })
-  // })
   
   // ! --------------
   // ! RETURNING MAIN 
@@ -217,9 +189,18 @@ const ArrowKeys = () => {
           />
         }
       </svg>
-      <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <svg id='dots' viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
         {
-          // dots
+          xArray.map((x, i) => {
+            return yArray.map((y, j) => (
+              <circle 
+                cx={0}
+                cy={0}
+                r={0}
+                fill='black'
+              />
+            ))
+          })
         }
       </svg>
     </div>
