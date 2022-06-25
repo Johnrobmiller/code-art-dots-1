@@ -1,7 +1,7 @@
 import _ from 'lodash'
 import calculateDots from './calculateDots';
 import drawDots from './drawDots';
-import update from './step';
+import update from './update';
 
 export default function renderDots() {
   const canvas = document.getElementById('canvas') as HTMLCanvasElement | null;
@@ -12,13 +12,11 @@ export default function renderDots() {
   if (!ctx) {
     throw Error ('Canvas context not found')
   }
-
+  
   const makeNewDots = (timestamp: number) => {
+    drawDots(ctx, canvas)
     calculateDots(timestamp)
-    drawDots(ctx)
   }
 
   update(makeNewDots)
-
-  ctx.stroke();
 }

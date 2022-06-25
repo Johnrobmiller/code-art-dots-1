@@ -127,9 +127,9 @@ function step (timestamp: number) {
 
   if (!dotsEl) dotsEl = document.getElementById('dots') as SVGElement | null
   if (previousTimestamp !== timestamp && dotsEl) {
-    console.log('fps', 1000 / (timestamp - previousTimestamp))
+    // console.log('fps', 1000 / (timestamp - previousTimestamp))
 
-    const tempo = timestamp / 5000 + 5000
+    const tempo = timestamp / 10000 + 5000
 
     const dotData = xArray.map((x, i) => {
 
@@ -145,8 +145,13 @@ function step (timestamp: number) {
           cx: relativeI,
           cy: relativeJ,
           r: o10 / 2,
-          fill: `hsl(${((o1 * 100 & tempo) + 180) * (tempo / 4)}, ${(o1 / 2 + 0.5) * 100 & tempo}%, ${(o1 / 2 + 0.5) * 100 & tempo}%)`
-        }    
+          fill: `
+            hsl(
+              ${((o1 * 100 & tempo) + 180) * (tempo / 4)}, 
+              ${(o1 / 2 + 0.5) * 100 & tempo}%, 
+              ${(o1 / 2 + 0.5) * 100 & tempo}%
+            )`
+          }    
       })
     })
 
