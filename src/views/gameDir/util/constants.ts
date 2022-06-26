@@ -1,4 +1,4 @@
-export const X_MAX = 50;
+export const X_MAX = 256;
 const screenRes = window.innerHeight / window.innerWidth;
 export const Y_MAX = Math.floor(X_MAX * screenRes);
 

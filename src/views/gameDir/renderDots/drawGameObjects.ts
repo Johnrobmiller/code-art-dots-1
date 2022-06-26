@@ -9,8 +9,8 @@ export default function drawGameObjects(
   ctx: CanvasRenderingContext2D,
   canvas: HTMLCanvasElement
 ) {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-
+  // ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.beginPath()
   ctx.arc(
     playerCenterX,
     playerCenterY,

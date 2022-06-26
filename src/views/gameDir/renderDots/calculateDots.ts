@@ -28,7 +28,7 @@ export default function calculateDots(timestamp: number) {
     
       const a1 =  makeA(speed, 1, iAndJ, j) / 2
     
-      const a10 = makeA(speed, 10, iAndJ, j) * 4
+      const a10 = makeA(speed, 10, iAndJ, j) / 2.5
     
       const color = `hsl(
         ${(((a1 * 100) & speed) + 180) * (speed / 4)}, 
