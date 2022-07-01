@@ -12,21 +12,21 @@ export default function drawDots(
 ) {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+  // when it's time to optimize: http://jsfiddle.net/loktar/63QZz/
+  
   // ctx.beginPath();
-  for (let i = 0; i < dotsData.length; i++) {
-    // framcCount is only an even number
-    // if (i % 2 === (frameCount / 2) % 2) continue
-    
-    for (let j = 0; j < dotsData[i].length; j++) {
+  // starting at index 1 to avoid rendering dots partially off screen, which hurts performance
+  for (let i = 1; i < dotsData.length; i++) {
+    for (let j = 1; j < dotsData[i].length; j++) {
       ctx.beginPath();
       ctx.arc(
         Math.floor(dotsData[i][j].x * PIXEL_POS_MULTIPLIER),
         Math.floor(dotsData[i][j].y * PIXEL_POS_MULTIPLIER),
-        Math.floor(dotsData[i][j].radius * 0.5 * DOT_RADIUS_MULTIPLIER),
+        dotsData[i][j].radius * DOT_RADIUS_MULTIPLIER,
         0,
         2 * Math.PI
       )
-      // const radius = Math.floor(dotsData[i][j].radius)
+      // const radius = dotsData[i][j].radius * DOT_RADIUS_MULTIPLIER * 2
       // const radiusHalfed = radius / 2
       // ctx.fillRect(
       //   Math.floor(dotsData[i][j].x * PIXEL_POS_MULTIPLIER - radiusHalfed),

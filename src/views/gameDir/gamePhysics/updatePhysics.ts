@@ -2,16 +2,16 @@ import { ACCELERATION_RATE, DEACCELERATION_RATE, MAX_MOMENTUM } from "../util/co
 import { keyStates, momentum, pos } from "../util/globalStates";
 
 const doThisEveryPhysicsFrame = () => {
-  if (keyStates.isRight) Math.min(MAX_MOMENTUM, (momentum[0] += ACCELERATION_RATE));
+  if (keyStates.isRight) momentum[0] = Math.min(MAX_MOMENTUM, (momentum[0] + ACCELERATION_RATE));
   else if (momentum[0] > 0) momentum[0] = Math.max(0, momentum[0] - DEACCELERATION_RATE);
 
-  if (keyStates.isLeft) Math.max(-MAX_MOMENTUM, (momentum[0] -= ACCELERATION_RATE));
+  if (keyStates.isLeft) momentum[0] = Math.max(-MAX_MOMENTUM, (momentum[0] - ACCELERATION_RATE));
   else if (momentum[0] < 0) momentum[0] = Math.min(0, momentum[0] + DEACCELERATION_RATE);
 
-  if (keyStates.isUp) Math.min(MAX_MOMENTUM, (momentum[1] += ACCELERATION_RATE));
+  if (keyStates.isUp) momentum[1] = Math.min(MAX_MOMENTUM, (momentum[1] + ACCELERATION_RATE));
   else if (momentum[1] > 0) momentum[1] = Math.max(0, momentum[1] - DEACCELERATION_RATE);
 
-  if (keyStates.isDown) Math.max(-MAX_MOMENTUM, (momentum[1] -= ACCELERATION_RATE));
+  if (keyStates.isDown) momentum[1] = Math.max(-MAX_MOMENTUM, (momentum[1] - ACCELERATION_RATE));
   else if (momentum[1] < 0) momentum[1] = Math.min(0, momentum[1] + DEACCELERATION_RATE);
 
   // todo: actual momentun

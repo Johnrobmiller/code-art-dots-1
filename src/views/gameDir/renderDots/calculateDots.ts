@@ -23,8 +23,7 @@ export default function calculateDots(timestamp: number) {
     for (let j = 0; j < dotsData[i].length; j++) {
       const relativePosY = Math.abs(j + pos[1]) % Y_MAX
     
-      // range between 0 and 1
-      const iAndJ = i & j;
+      const iAndJ = i | j | pos[0]/10 & pos[1]/10;
     
       const a1 =  makeA(speed, 1, iAndJ, j) / 2
     

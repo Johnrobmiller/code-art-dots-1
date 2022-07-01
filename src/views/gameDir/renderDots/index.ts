@@ -44,7 +44,7 @@ export default function renderDots() {
 
   const makeNewDots = (timestamp: number, frameCount: number) => {
     if (frameCount % 2 === 0) drawDots(ctx, canvas, frameCount);
-    drawGameObjects(ctx, canvas)
+    // drawGameObjects(ctx, canvas)
     calculateDots(timestamp);
   };
 
