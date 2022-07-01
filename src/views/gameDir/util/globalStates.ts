@@ -27,3 +27,8 @@ export const keyStates = {
 export const renderStates = {
   shouldRender: true,
 }
+
+export const time = {
+  tempo: 0.00001,
+  tempoHotkeySensitivity: 1.333333
+}

@@ -1,5 +1,5 @@
-import { STARTING_TIME, TEMPO, X_MAX, Y_MAX } from "../util/constants";
-import { dotsData, pos } from "../util/globalStates";
+import { STARTING_TIME, X_MAX, Y_MAX } from "../util/constants";
+import { dotsData, pos, time } from "../util/globalStates";
 import { IDotData } from "../util/types";
 
 const makeA = (
@@ -16,23 +16,30 @@ const makeA = (
 }
 
 export default function calculateDots(timestamp: number) {
-  const speed = timestamp / TEMPO + STARTING_TIME;
+  const speed = timestamp * time.tempo + STARTING_TIME;
 
   for (let i = 0; i < dotsData.length; i++) {
     const relativePosX = X_MAX - Math.abs(i + pos[0]) % X_MAX
     for (let j = 0; j < dotsData[i].length; j++) {
       const relativePosY = Math.abs(j + pos[1]) % Y_MAX
     
-      const iAndJ = i | j | pos[0]/10 & pos[1]/10;
+      // const iAndJ = i | j | pos[0]/10 & pos[1]/10;
+      const iAndJ = i & j
     
       const a1 =  makeA(speed, 1, iAndJ, j) / 2
     
       const a10 = makeA(speed, 10, iAndJ, j) / 2.5
     
+      // const color = `hsl(
+      //   ${(((a1 * 100) & speed) + 180) * (speed / 4)}, 
+      //   ${((a1 / 2 + 0.5) * 100) & speed}%, 
+      //   ${((a1 / 2 + 0.5) * 100) & speed}%)
+      // `
       const color = `hsl(
-        ${(((a1 * 100) & speed) + 180) * (speed / 4)}, 
-        ${((a1 / 2 + 0.5) * 100) & speed}%, 
-        ${((a1 / 2 + 0.5) * 100) & speed}%)
+        255, 
+        
+        100%,
+        ${((a1 / 2 + 0.5) * 100 * dotsData[i][j].radius) % 10 * 5}%)
       `
 
       dotsData[i][j].x = relativePosX

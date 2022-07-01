@@ -2,6 +2,10 @@ import { ACCELERATION_RATE, DEACCELERATION_RATE, MAX_MOMENTUM } from "../util/co
 import { keyStates, momentum, pos } from "../util/globalStates";
 
 const doThisEveryPhysicsFrame = () => {
+  handleMovement()
+};
+
+const handleMovement = () => {
   if (keyStates.isRight) momentum[0] = Math.min(MAX_MOMENTUM, (momentum[0] + ACCELERATION_RATE));
   else if (momentum[0] > 0) momentum[0] = Math.max(0, momentum[0] - DEACCELERATION_RATE);
 
@@ -21,7 +25,7 @@ const doThisEveryPhysicsFrame = () => {
 
   pos[0] += momentum[0];
   pos[1] += momentum[1];
-};
+}
 
 let previousNow = -1
 
