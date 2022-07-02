@@ -21,14 +21,14 @@ export default function calculateDots(timestamp: number) {
     for (let j = 0; j < dotsData[i].length; j++) {
       const relativePosY = Math.abs(j + pos[1]) % Y_MAX
     
-      const _a = oscTriA((i) * (j / 100) * (speed / 100 ), 1) / 2 + 0.5 // range: [0, 1]
+      const _a = oscTriA(i & j, ((speed % 100)) & 161.6) / 2 + 0.5 // range: [0, 1]
       
       const hue = _a * 100 + 250 // range: [0, 360]
       const saturation = _a * 100 // range: [0, 100]
       const lightness = _a * 50 // range: [0, 100]
       const color = `hsl(${hue}, ${saturation}%, ${lightness}%)`
 
-      const radius = _a + _a / 2 * 0.8 // range: [0, 1]
+      const radius = _a * 0.8 // range: [0, 1]
 
       dotsData[i][j].x = relativePosX
       dotsData[i][j].y = relativePosY
