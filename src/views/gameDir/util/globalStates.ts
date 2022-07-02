@@ -29,6 +29,6 @@ export const renderStates = {
 }
 
 export const time = {
-  tempo: 0.00001,
-  tempoHotkeySensitivity: 1.333333
+  tempo: 0.001,
+  tempoHotkeySensitivity: 1.5
 }

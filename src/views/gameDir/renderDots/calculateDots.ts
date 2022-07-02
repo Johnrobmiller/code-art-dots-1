@@ -1,18 +1,16 @@
-import { STARTING_TIME, X_MAX, Y_MAX } from "../util/constants";
+import { DOT_RADIUS_MULTIPLIER, STARTING_TIME, X_MAX, Y_MAX } from "../util/constants";
 import { dotsData, pos, time } from "../util/globalStates";
 import { IDotData } from "../util/types";
 
-const makeA = (
+// range: [0, 1]
+const oscTriA = (
   speed: number, 
-  speedMultiplier: number,
-  iAndJ: number,
-  j: number
+  period: number
 ) => {
-  return Math.sin(
-    speed * speedMultiplier + (
-      iAndJ - j / 100
-    )
-  ) + 1
+  const speedOverPeriod = speed / period;
+  const a = ~~(speedOverPeriod + 0.5)
+  const b = speedOverPeriod - a
+  return 2 * Math.abs(b)
 }
 
 export default function calculateDots(timestamp: number) {
@@ -23,28 +21,18 @@ export default function calculateDots(timestamp: number) {
     for (let j = 0; j < dotsData[i].length; j++) {
       const relativePosY = Math.abs(j + pos[1]) % Y_MAX
     
-      // const iAndJ = i | j | pos[0]/10 & pos[1]/10;
-      const iAndJ = i & j
-    
-      const a1 =  makeA(speed, 1, iAndJ, j) / 2
-    
-      const a10 = makeA(speed, 10, iAndJ, j) / 2.5
-    
-      // const color = `hsl(
-      //   ${(((a1 * 100) & speed) + 180) * (speed / 4)}, 
-      //   ${((a1 / 2 + 0.5) * 100) & speed}%, 
-      //   ${((a1 / 2 + 0.5) * 100) & speed}%)
-      // `
-      const color = `hsl(
-        255, 
-        
-        100%,
-        ${((a1 / 2 + 0.5) * 100 * dotsData[i][j].radius) % 10 * 5}%)
-      `
+      const _a = oscTriA((i) * (j / 100) * (speed / 100 ), 1) / 2 + 0.5 // range: [0, 1]
+      
+      const hue = _a * 100 + 250 // range: [0, 360]
+      const saturation = _a * 100 // range: [0, 100]
+      const lightness = _a * 50 // range: [0, 100]
+      const color = `hsl(${hue}, ${saturation}%, ${lightness}%)`
+
+      const radius = _a + _a / 2 * 0.8 // range: [0, 1]
 
       dotsData[i][j].x = relativePosX
       dotsData[i][j].y = relativePosY
-      dotsData[i][j].radius = a10
+      dotsData[i][j].radius = radius
       dotsData[i][j].color = color
     }
   }
